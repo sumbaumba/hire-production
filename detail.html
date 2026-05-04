@@ -94,6 +94,8 @@
     .cmod-done h4 { font-size: 20px; font-weight: 800; color: #0a0a0a; letter-spacing: -.03em; }
     .cmod-done p { font-size: 14px; color: #666; line-height: 1.7; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>emailjs.init("zOUbWREObhSPvZDah");</script>
 </head>
 <body>
 
@@ -263,21 +265,28 @@
     const get = (k) => fd.get(k) || '';
     const phone = get('p1') + '-' + get('p2') + '-' + get('p3');
     const budgets = Array.from(document.querySelectorAll('.cmod-check.active')).map(el => el.textContent).join(', ') || '미선택';
-    const body = encodeURIComponent(
-      '제목: ' + get('title') + '\n성함: ' + get('name') + '\n회사명: ' + get('company') +
-      '\n연락처: ' + phone + '\n이메일: ' + get('email') + '\n카테고리: ' + get('category') +
-      '\n예산: ' + budgets + '\n분량/편수: ' + get('count') + '\n제작기한: ' + get('deadline') +
-      '\n\n상세 요청사항:\n' + get('message')
-    );
-    const subject = encodeURIComponent('[견적문의] ' + get('title') + ' - ' + get('name'));
-    window.open('mailto:higher3pd@gmail.com?subject=' + subject + '&body=' + body);
-    document.getElementById('cmod-form-wrap').innerHTML =
-      '<div class="cmod-done">' +
-      '<div class="cmod-done-icon">✓</div>' +
-      '<h4>이메일 앱이 열렸습니다</h4>' +
-      '<p>작성하신 내용을 전송해주시면<br>빠른 시일 내에 연락드리겠습니다.</p>' +
-      '<button class="cmod-submit" onclick="closeModal()" style="max-width:200px;margin:0 auto;">닫기</button>' +
-      '</div>';
+    const btn = e.target.querySelector('.cmod-submit');
+    btn.textContent = '전송 중...'; btn.disabled = true;
+    const params = {
+      title: get('title'), name: get('name'), company: get('company'),
+      phone: phone, email: get('email'), category: get('category'),
+      budget: budgets, count: get('count'), deadline: get('deadline'),
+      message: get('message')
+    };
+    emailjs.send('service_n3g4ozg', 'template_q6e6vna', params, 'zOUbWREObhSPvZDah')
+      .then(function() {
+        document.getElementById('cmod-form-wrap').innerHTML =
+          '<div class="cmod-done">' +
+          '<div class="cmod-done-icon">✓</div>' +
+          '<h4>문의가 접수되었습니다</h4>' +
+          '<p>빠른 시일 내에 연락드리겠습니다.<br>higher3pd@gmail.com</p>' +
+          '<button class="cmod-submit" onclick="closeModal()" style="max-width:200px;margin:0 auto;">닫기</button>' +
+          '</div>';
+      })
+      .catch(function() {
+        btn.textContent = '견적 받아보기 →'; btn.disabled = false;
+        alert('전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      });
   }
 </script>
 </body>
