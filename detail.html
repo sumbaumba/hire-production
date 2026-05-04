@@ -23,34 +23,166 @@
     .dp-nav__back:hover { opacity: .7; }
     .dp-nav__back svg { width: 16px; height: 16px; }
 
-    .dp-body {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .dp-body img, .dp-body source {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
+    .dp-body { max-width: 800px; margin: 0 auto; }
+    .dp-body img { display: block; width: 100%; height: auto; }
 
     .dp-cta {
-      background: #1A3DEE;
-      padding: 60px 40px;
-      text-align: center;
+      background: #1A3DEE; padding: 60px 40px; text-align: center;
     }
     .dp-cta p { color: rgba(255,255,255,.75); font-size: 16px; margin-bottom: 24px; }
-    .dp-cta a {
-      display: inline-block;
-      background: #fff; color: #1A3DEE;
-      font-size: 18px; font-weight: 800;
-      padding: 18px 48px; border-radius: 6px;
-      text-decoration: none; letter-spacing: -.01em;
-      transition: opacity .15s;
+    .dp-cta button {
+      display: inline-block; background: #fff; color: #1A3DEE;
+      font-size: 18px; font-weight: 800; padding: 18px 48px; border-radius: 6px;
+      border: none; cursor: pointer; letter-spacing: -.01em; transition: opacity .15s;
+      font-family: inherit;
     }
-    .dp-cta a:hover { opacity: .85; }
+    .dp-cta button:hover { opacity: .85; }
+
+    /* ── 문의 모달 ── */
+    .cmod-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,.7); align-items: center; justify-content: center;
+      padding: 16px; backdrop-filter: blur(6px); overflow-y: auto;
+    }
+    .cmod-overlay.open { display: flex; }
+    .cmod-box {
+      background: #fafaf8; border-radius: 16px; width: 100%; max-width: 600px;
+      margin: auto; box-shadow: 0 24px 80px rgba(0,0,0,.3);
+    }
+    .cmod-head {
+      padding: 36px 36px 24px; display: flex; justify-content: space-between;
+      align-items: flex-start; border-bottom: 1px solid #eee;
+    }
+    .cmod-tag { font-size: 10px; letter-spacing: .1em; color: #1A3DEE; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .cmod-title { font-size: 24px; font-weight: 800; color: #0a0a0a; letter-spacing: -.04em; margin-bottom: 6px; }
+    .cmod-sub { font-size: 13px; color: #888; }
+    .cmod-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #bbb; padding: 0; line-height: 1; flex-shrink: 0; margin-top: 4px; }
+    .cmod-close:hover { color: #0a0a0a; }
+    .cmod-form { padding: 28px 36px 36px; display: flex; flex-direction: column; gap: 18px; }
+    .cmod-field { display: flex; flex-direction: column; gap: 7px; }
+    .cmod-field > label { font-size: 11px; font-weight: 700; color: #555; letter-spacing: .06em; text-transform: uppercase; }
+    .req { color: #1A3DEE; }
+    .cmod-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .cmod-form input, .cmod-form textarea, .cmod-form select {
+      border: 1.5px solid #e5e5e5; border-radius: 8px; padding: 11px 14px;
+      font-size: 14px; color: #0a0a0a; outline: none; transition: border-color .15s;
+      font-family: inherit; background: #fff;
+    }
+    .cmod-form input:focus, .cmod-form textarea:focus, .cmod-form select:focus {
+      border-color: #1A3DEE; box-shadow: 0 0 0 3px rgba(26,61,238,.08);
+    }
+    .cmod-phone { display: flex; align-items: center; gap: 6px; }
+    .cmod-phone input { width: 80px; text-align: center; }
+    .cmod-phone span { color: #aaa; font-size: 16px; }
+    .cmod-checks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+    .cmod-check {
+      display: flex; align-items: center; gap: 6px; background: #fff;
+      border: 1.5px solid #e5e5e5; border-radius: 20px; padding: 6px 14px;
+      cursor: pointer; font-size: 13px; color: #555; transition: all .15s; user-select: none;
+    }
+    .cmod-check.active { background: #1A3DEE; border-color: #1A3DEE; color: #fff; }
+    .cmod-form textarea { resize: vertical; min-height: 90px; }
+    .cmod-submit {
+      background: #0a0a0a; color: #fff; border: none; border-radius: 8px; padding: 16px;
+      font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s;
+      margin-top: 4px; letter-spacing: -.01em; font-family: inherit; width: 100%;
+    }
+    .cmod-submit:hover { background: #1A3DEE; }
+    .cmod-note { font-size: 11px; color: #bbb; text-align: center; }
+    .cmod-done { padding: 56px 36px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .cmod-done-icon { width: 56px; height: 56px; border-radius: 50%; background: #1A3DEE; color: #fff; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+    .cmod-done h4 { font-size: 20px; font-weight: 800; color: #0a0a0a; letter-spacing: -.03em; }
+    .cmod-done p { font-size: 14px; color: #666; line-height: 1.7; }
   </style>
 </head>
 <body>
+
+<!-- 문의 모달 -->
+<div class="cmod-overlay" id="cmod">
+  <div class="cmod-box">
+    <div class="cmod-head">
+      <div>
+        <div class="cmod-tag">HIGHER PRODUCTION</div>
+        <h3 class="cmod-title">견적 · 문의하기</h3>
+        <p class="cmod-sub">아래 내용을 작성해주시면 빠르게 검토 후 연락드리겠습니다.</p>
+      </div>
+      <button class="cmod-close" onclick="closeModal()">&#x2715;</button>
+    </div>
+    <div id="cmod-form-wrap">
+      <form class="cmod-form" onsubmit="submitForm(event)">
+        <div class="cmod-field">
+          <label>제목 <span class="req">*</span></label>
+          <input name="title" required placeholder="예) 병원 브랜드 영상 제작 문의">
+        </div>
+        <div class="cmod-row2">
+          <div class="cmod-field">
+            <label>성함 <span class="req">*</span></label>
+            <input name="name" required placeholder="홍길동">
+          </div>
+          <div class="cmod-field">
+            <label>회사명</label>
+            <input name="company" placeholder="하이어 프로덕션">
+          </div>
+        </div>
+        <div class="cmod-field">
+          <label>연락처 <span class="req">*</span></label>
+          <div class="cmod-phone">
+            <input name="p1" required maxlength="3" placeholder="010">
+            <span>-</span>
+            <input name="p2" required maxlength="4" placeholder="0000">
+            <span>-</span>
+            <input name="p3" required maxlength="4" placeholder="0000">
+          </div>
+        </div>
+        <div class="cmod-row2">
+          <div class="cmod-field">
+            <label>이메일</label>
+            <input name="email" type="email" placeholder="example@email.com">
+          </div>
+          <div class="cmod-field">
+            <label>카테고리</label>
+            <select name="category">
+              <option value="">선택</option>
+              <option>TVCF · 광고</option>
+              <option>브랜드 필름</option>
+              <option>숏폼 · 바이럴</option>
+              <option>유튜브 채널 운영</option>
+              <option>기업 콘텐츠</option>
+              <option>기타</option>
+            </select>
+          </div>
+        </div>
+        <div class="cmod-field">
+          <label>예산</label>
+          <div class="cmod-checks" id="budgetChecks">
+            <span class="cmod-check" onclick="toggleBudget(this)">500만원 이내</span>
+            <span class="cmod-check" onclick="toggleBudget(this)">500 ~ 1,000만원</span>
+            <span class="cmod-check" onclick="toggleBudget(this)">1,000 ~ 2,000만원</span>
+            <span class="cmod-check" onclick="toggleBudget(this)">2,000 ~ 5,000만원</span>
+            <span class="cmod-check" onclick="toggleBudget(this)">5,000만원 ~ 1억</span>
+            <span class="cmod-check" onclick="toggleBudget(this)">1억 이상</span>
+          </div>
+        </div>
+        <div class="cmod-row2">
+          <div class="cmod-field">
+            <label>분량 / 편수</label>
+            <input name="count" placeholder="예) 3분 내외 · 2편">
+          </div>
+          <div class="cmod-field">
+            <label>제작 기한</label>
+            <input name="deadline" placeholder="예) 2026년 7월">
+          </div>
+        </div>
+        <div class="cmod-field">
+          <label>상세 요청사항</label>
+          <textarea name="message" rows="4" placeholder="레퍼런스, 촬영 일정, 특이사항 등 자유롭게 작성해주세요."></textarea>
+        </div>
+        <button type="submit" class="cmod-submit">견적 받아보기 →</button>
+        <p class="cmod-note">제출 시 이메일 앱이 열립니다 · higher3pd@gmail.com · +82 10-3313-0328</p>
+      </form>
+    </div>
+  </div>
+</div>
 
 <nav class="dp-nav">
   <a href="./index.html" class="dp-nav__back">
@@ -105,8 +237,48 @@
 
 <div class="dp-cta">
   <p>문의 및 상담은 아래로 연락해주세요</p>
-  <a href="./index.html#contact">문의하기 →</a>
+  <button onclick="openModal()">문의하기 →</button>
 </div>
 
+<script>
+  function openModal() {
+    document.getElementById('cmod').classList.add('open');
+    document.getElementById('cmod-form-wrap').innerHTML = document.getElementById('cmod-form-wrap').innerHTML;
+  }
+  function closeModal() {
+    document.getElementById('cmod').classList.remove('open');
+  }
+  document.getElementById('cmod').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+  function toggleBudget(el) {
+    el.classList.toggle('active');
+  }
+  function submitForm(e) {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const get = (k) => fd.get(k) || '';
+    const phone = get('p1') + '-' + get('p2') + '-' + get('p3');
+    const budgets = Array.from(document.querySelectorAll('.cmod-check.active')).map(el => el.textContent).join(', ') || '미선택';
+    const body = encodeURIComponent(
+      '제목: ' + get('title') + '\n성함: ' + get('name') + '\n회사명: ' + get('company') +
+      '\n연락처: ' + phone + '\n이메일: ' + get('email') + '\n카테고리: ' + get('category') +
+      '\n예산: ' + budgets + '\n분량/편수: ' + get('count') + '\n제작기한: ' + get('deadline') +
+      '\n\n상세 요청사항:\n' + get('message')
+    );
+    const subject = encodeURIComponent('[견적문의] ' + get('title') + ' - ' + get('name'));
+    window.open('mailto:higher3pd@gmail.com?subject=' + subject + '&body=' + body);
+    document.getElementById('cmod-form-wrap').innerHTML =
+      '<div class="cmod-done">' +
+      '<div class="cmod-done-icon">✓</div>' +
+      '<h4>이메일 앱이 열렸습니다</h4>' +
+      '<p>작성하신 내용을 전송해주시면<br>빠른 시일 내에 연락드리겠습니다.</p>' +
+      '<button class="cmod-submit" onclick="closeModal()" style="max-width:200px;margin:0 auto;">닫기</button>' +
+      '</div>';
+  }
+</script>
 </body>
 </html>
