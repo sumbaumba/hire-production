@@ -16,6 +16,10 @@
     }
     .dp-nav__logo { overflow: hidden; height: 52px; display: flex; align-items: center; position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
     .dp-nav__logo img { height: 300px; width: auto; display: block; flex-shrink: 0; }
+    @media (max-width: 768px) {
+      .dp-nav { padding: 0 16px; overflow: hidden; }
+      .dp-nav__logo { width: 52px; right: 0; }
+    }
     .dp-nav__back {
       display: flex; align-items: center; gap: 8px;
       color: #1A3DEE; font-size: 13px; font-weight: 600;
@@ -166,8 +170,9 @@
     .cmod-done h4 { font-size: 20px; font-weight: 800; color: #0a0a0a; letter-spacing: -.03em; }
     .cmod-done p { font-size: 14px; color: #666; line-height: 1.7; }
     @media (max-width: 640px) {
-      .dp-nav { padding: 0 16px; }
-      .dp-nav__logo img { height: 40px; }
+      .dp-nav { padding: 0 16px; overflow: hidden; }
+      .dp-nav__logo { width: 52px; }
+      .dp-nav__logo img { height: 200px; }
       .dp-body { max-width: 100%; }
       .dp-cta { padding: 40px 20px; }
       .cmod-overlay { padding: 0; align-items: flex-end; }
