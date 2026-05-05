@@ -113,6 +113,19 @@
     .cmod-done-icon { width: 56px; height: 56px; border-radius: 50%; background: #1A3DEE; color: #fff; font-size: 22px; display: flex; align-items: center; justify-content: center; }
     .cmod-done h4 { font-size: 20px; font-weight: 800; color: #0a0a0a; letter-spacing: -.03em; }
     .cmod-done p { font-size: 14px; color: #666; line-height: 1.7; }
+    @media (max-width: 640px) {
+      .cmod-overlay { padding: 0; align-items: flex-end; }
+      .cmod-wrap { max-width: 100% !important; width: 100%; border-radius: 20px 20px 0 0; gap: 0; }
+      .cmod-box { flex: 1 1 auto; border-radius: 20px 20px 0 0; max-height: 92vh; overflow-y: auto; box-shadow: none; }
+      .cmod-plan-panel { display: none !important; }
+      .cmod-head { padding: 24px 20px 20px; }
+      .cmod-form { padding: 20px 20px 32px; gap: 14px; }
+      .cmod-row2 { grid-template-columns: 1fr; }
+      .cmod-title { font-size: 20px; }
+      .cmod-budget-btns { gap: 6px; }
+      .cmod-budget-btn { padding: 10px 14px; font-size: 13px; }
+      .cmod-submit { padding: 16px; font-size: 15px; }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>emailjs.init("zOUbWREObhSPvZDah");</script>
