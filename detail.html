@@ -14,7 +14,8 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 40px; height: 60px;
     }
-    .dp-nav__logo img { height: 52px; width: auto; display: block; }
+    .dp-nav__logo { overflow: hidden; height: 52px; display: flex; align-items: center; }
+    .dp-nav__logo img { height: 300px; width: auto; display: block; flex-shrink: 0; }
     .dp-nav__back {
       display: flex; align-items: center; gap: 8px;
       color: #1A3DEE; font-size: 13px; font-weight: 600;
@@ -229,7 +230,7 @@
     포트폴리오로 돌아가기
   </a>
   <a href="./index.html" class="dp-nav__logo">
-    <img src="./logo.png" alt="HIGHER PRODUCTION" style="height:52px;">
+    <img src="./logo.png" alt="HIGHER PRODUCTION" style="height:300px;flex-shrink:0;">
   </a>
 </nav>
 
