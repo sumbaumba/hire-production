@@ -45,10 +45,29 @@
       padding: 16px; backdrop-filter: blur(6px); overflow-y: auto;
     }
     .cmod-overlay.open { display: flex; }
-    .cmod-box {
-      background: #fafaf8; border-radius: 16px; width: 100%; max-width: 600px;
-      margin: auto; box-shadow: 0 24px 80px rgba(0,0,0,.3);
+    .cmod-wrap {
+      display: flex; align-items: stretch; margin: auto;
+      max-width: 600px; width: 100%; border-radius: 16px;
+      transition: max-width .4s cubic-bezier(.2,.7,.2,1); gap: 20px;
     }
+    .cmod-wrap.plan-open { max-width: 1120px; }
+    .cmod-box {
+      background: #fafaf8; border-radius: 16px; flex: 0 0 580px; min-width: 0;
+      overflow-y: auto; max-height: 90vh; box-shadow: 0 24px 80px rgba(0,0,0,.3);
+    }
+    .cmod-plan-panel {
+      flex: 1; min-width: 0; overflow: hidden; border-radius: 16px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.25); display: none;
+    }
+    .cmod-wrap.plan-open .cmod-plan-panel { display: block; }
+    .cmod-plan-panel img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .cmod-budget-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .cmod-plan-btn {
+      background: none; border: 1.5px solid #1A3DEE; border-radius: 20px;
+      padding: 4px 12px; font-size: 12px; font-weight: 700; color: #1A3DEE;
+      cursor: pointer; letter-spacing: .03em; transition: all .15s; font-family: inherit;
+    }
+    .cmod-plan-btn:hover { background: #1A3DEE; color: #fff; }
     .cmod-head {
       padding: 36px 36px 24px; display: flex; justify-content: space-between;
       align-items: flex-start; border-bottom: 1px solid #eee;
@@ -102,7 +121,11 @@
 
 <!-- 문의 모달 -->
 <div class="cmod-overlay" id="cmod">
-  <div class="cmod-box">
+  <div class="cmod-wrap" id="cmodWrap">
+    <div class="cmod-plan-panel">
+      <img src="./jpg/31.jpg" alt="플랜 안내">
+    </div>
+    <div class="cmod-box">
     <div class="cmod-head">
       <div>
         <div class="cmod-tag">HIGHER PRODUCTION</div>
@@ -157,7 +180,10 @@
           </div>
         </div>
         <div class="cmod-field">
-          <label>예산</label>
+          <div class="cmod-budget-head">
+            <label>예산</label>
+            <button type="button" class="cmod-plan-btn" id="planToggleBtn" onclick="togglePlan()">플랜 보기 →</button>
+          </div>
           <div class="cmod-budget-btns" id="budgetBtns">
             <button type="button" class="cmod-budget-btn" onclick="selectBudget(this)">플랜 A</button>
             <button type="button" class="cmod-budget-btn" onclick="selectBudget(this)">플랜 B</button>
@@ -174,6 +200,7 @@
         <p class="cmod-note">higher3pd@gmail.com · +82 10-3313-0388</p>
       </form>
     </div>
+  </div>
   </div>
 </div>
 
@@ -247,6 +274,12 @@
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
   });
+  function togglePlan() {
+    const wrap = document.getElementById('cmodWrap');
+    const btn = document.getElementById('planToggleBtn');
+    wrap.classList.toggle('plan-open');
+    btn.textContent = wrap.classList.contains('plan-open') ? '플랜 닫기 ×' : '플랜 보기 →';
+  }
   function toggleCategoryOther(sel) {
     document.getElementById('categoryOther').style.display = sel.value === '기타' ? '' : 'none';
   }
