@@ -180,16 +180,20 @@
       .dp-body { max-width: 100%; }
       .dp-cta { padding: 40px 20px; }
       .cmod-overlay { padding: 0; align-items: flex-end; }
-      .cmod-wrap { max-width: 100% !important; width: 100%; border-radius: 20px 20px 0 0; gap: 0; }
-      .cmod-box { flex: 1 1 auto; border-radius: 20px 20px 0 0; max-height: 92vh; overflow-y: auto; box-shadow: none; }
-      .cmod-plan-panel { display: none !important; }
-      .cmod-head { padding: 24px 20px 20px; }
-      .cmod-form { padding: 20px 20px 32px; gap: 14px; }
+      .cmod-wrap { max-width: 100% !important; width: 100%; border-radius: 20px 20px 0 0; flex-direction: column; gap: 0; max-height: 95vh; overflow-y: auto; }
+      .cmod-box { flex: none; border-radius: 20px 20px 0 0; max-height: none; overflow-y: visible; box-shadow: none; }
+      .cmod-plan-panel { display: block !important; flex: none; border-radius: 0; box-shadow: none; order: 2; }
+      .cmod-plan-panel img { width: 100%; height: auto; display: block; }
+      .cmod-head { padding: 28px 20px 20px; }
+      .cmod-form { padding: 20px 20px 36px; gap: 16px; }
       .cmod-row2 { grid-template-columns: 1fr; }
-      .cmod-title { font-size: 20px; }
-      .cmod-budget-btns { gap: 6px; }
-      .cmod-budget-btn { padding: 10px 14px; font-size: 13px; }
-      .cmod-submit { padding: 16px; font-size: 15px; }
+      .cmod-title { font-size: 22px; }
+      .cmod-field > label { font-size: 12px; }
+      .cmod-form input, .cmod-form textarea, .cmod-form select { font-size: 16px; padding: 13px 14px; }
+      .cmod-budget-btns { gap: 8px; }
+      .cmod-budget-btn { padding: 12px 16px; font-size: 14px; }
+      .cmod-submit { padding: 18px; font-size: 16px; font-weight: 800; }
+      .cmod-plan-btn { font-size: 13px; padding: 6px 14px; }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -360,7 +364,14 @@
     const wrap = document.getElementById('cmodWrap');
     const btn = document.getElementById('planToggleBtn');
     wrap.classList.toggle('plan-open');
-    btn.textContent = wrap.classList.contains('plan-open') ? '플랜 닫기 ×' : '플랜 보기 →';
+    const isOpen = wrap.classList.contains('plan-open');
+    btn.textContent = isOpen ? '플랜 닫기 ×' : '플랜 보기 →';
+    if (isOpen && window.innerWidth <= 640) {
+      setTimeout(() => {
+        const panel = wrap.querySelector('.cmod-plan-panel');
+        if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+    }
   }
   // ── 우측 네비게이션 ──
   const DP_SECTIONS = [
