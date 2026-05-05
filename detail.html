@@ -74,13 +74,14 @@
     .cmod-phone { display: flex; align-items: center; gap: 6px; }
     .cmod-phone input { width: 80px; text-align: center; }
     .cmod-phone span { color: #aaa; font-size: 16px; }
-    .cmod-checks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
-    .cmod-check {
-      display: flex; align-items: center; gap: 6px; background: #fff;
-      border: 1.5px solid #e5e5e5; border-radius: 20px; padding: 6px 14px;
-      cursor: pointer; font-size: 13px; color: #555; transition: all .15s; user-select: none;
+    .cmod-budget-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+    .cmod-budget-btn {
+      padding: 10px 18px; border: 1.5px solid #e5e5e5; border-radius: 8px;
+      background: #fff; color: #555; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all .15s; font-family: inherit;
     }
-    .cmod-check.active { background: #1A3DEE; border-color: #1A3DEE; color: #fff; }
+    .cmod-budget-btn:hover { border-color: #1A3DEE; color: #1A3DEE; }
+    .cmod-budget-btn--on { background: #1A3DEE; border-color: #1A3DEE; color: #fff; font-weight: 700; }
     .cmod-form textarea { resize: vertical; min-height: 90px; }
     .cmod-submit {
       background: #0a0a0a; color: #fff; border: none; border-radius: 8px; padding: 16px;
@@ -114,7 +115,7 @@
       <form class="cmod-form" onsubmit="submitForm(event)">
         <div class="cmod-field">
           <label>제목 <span class="req">*</span></label>
-          <input name="title" required placeholder="예) 병원 브랜드 영상 제작 문의">
+          <input name="title" required placeholder="예) 브랜드 영상 제작 문의">
         </div>
         <div class="cmod-row2">
           <div class="cmod-field">
@@ -143,7 +144,7 @@
           </div>
           <div class="cmod-field">
             <label>카테고리</label>
-            <select name="category">
+            <select name="category" id="categorySelect" onchange="toggleCategoryOther(this)">
               <option value="">선택</option>
               <option>TVCF · 광고</option>
               <option>브랜드 필름</option>
@@ -152,35 +153,25 @@
               <option>기업 콘텐츠</option>
               <option>기타</option>
             </select>
+            <input name="category_other" id="categoryOther" placeholder="직접 입력해주세요" style="display:none;margin-top:8px;">
           </div>
         </div>
         <div class="cmod-field">
           <label>예산</label>
-          <div class="cmod-checks" id="budgetChecks">
-            <span class="cmod-check" onclick="toggleBudget(this)">500만원 이내</span>
-            <span class="cmod-check" onclick="toggleBudget(this)">500 ~ 1,000만원</span>
-            <span class="cmod-check" onclick="toggleBudget(this)">1,000 ~ 2,000만원</span>
-            <span class="cmod-check" onclick="toggleBudget(this)">2,000 ~ 5,000만원</span>
-            <span class="cmod-check" onclick="toggleBudget(this)">5,000만원 ~ 1억</span>
-            <span class="cmod-check" onclick="toggleBudget(this)">1억 이상</span>
+          <div class="cmod-budget-btns" id="budgetBtns">
+            <button type="button" class="cmod-budget-btn" onclick="selectBudget(this)">플랜 A</button>
+            <button type="button" class="cmod-budget-btn" onclick="selectBudget(this)">플랜 B</button>
+            <button type="button" class="cmod-budget-btn" onclick="selectBudget(this)">상담 후 협의</button>
+            <button type="button" class="cmod-budget-btn" onclick="selectBudget(this)">기타</button>
           </div>
-        </div>
-        <div class="cmod-row2">
-          <div class="cmod-field">
-            <label>분량 / 편수</label>
-            <input name="count" placeholder="예) 3분 내외 · 2편">
-          </div>
-          <div class="cmod-field">
-            <label>제작 기한</label>
-            <input name="deadline" placeholder="예) 2026년 7월">
-          </div>
+          <input name="budget_other" id="budgetOther" placeholder="예산을 직접 입력해주세요" style="display:none;margin-top:8px;">
         </div>
         <div class="cmod-field">
           <label>상세 요청사항</label>
           <textarea name="message" rows="4" placeholder="레퍼런스, 촬영 일정, 특이사항 등 자유롭게 작성해주세요."></textarea>
         </div>
         <button type="submit" class="cmod-submit">견적 받아보기 →</button>
-        <p class="cmod-note">제출 시 이메일 앱이 열립니다 · higher3pd@gmail.com · +82 10-3313-0388</p>
+        <p class="cmod-note">higher3pd@gmail.com · +82 10-3313-0388</p>
       </form>
     </div>
   </div>
@@ -256,22 +247,29 @@
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
   });
-  function toggleBudget(el) {
-    el.classList.toggle('active');
+  function toggleCategoryOther(sel) {
+    document.getElementById('categoryOther').style.display = sel.value === '기타' ? '' : 'none';
+  }
+  let selectedBudget = '';
+  function selectBudget(btn) {
+    document.querySelectorAll('.cmod-budget-btn').forEach(b => b.classList.remove('cmod-budget-btn--on'));
+    btn.classList.add('cmod-budget-btn--on');
+    selectedBudget = btn.textContent;
+    document.getElementById('budgetOther').style.display = selectedBudget === '기타' ? '' : 'none';
   }
   function submitForm(e) {
     e.preventDefault();
     const fd = new FormData(e.target);
     const get = (k) => fd.get(k) || '';
     const phone = get('p1') + '-' + get('p2') + '-' + get('p3');
-    const budgets = Array.from(document.querySelectorAll('.cmod-check.active')).map(el => el.textContent).join(', ') || '미선택';
+    const categoryVal = get('category') === '기타' ? '기타: ' + get('category_other') : get('category');
+    const budgetVal = selectedBudget === '기타' ? '기타: ' + get('budget_other') : selectedBudget || '미선택';
     const btn = e.target.querySelector('.cmod-submit');
     btn.textContent = '전송 중...'; btn.disabled = true;
     const params = {
       title: get('title'), name: get('name'), company: get('company'),
-      phone: phone, email: get('email'), category: get('category'),
-      budget: budgets, count: get('count'), deadline: get('deadline'),
-      message: get('message')
+      phone: phone, email: get('email'), category: categoryVal,
+      budget: budgetVal, message: get('message')
     };
     emailjs.send('service_n3g4ozg', 'template_q6e6vna', params, 'zOUbWREObhSPvZDah')
       .then(function() {
